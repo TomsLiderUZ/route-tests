@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPA Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        nav a { margin-right: 15px; text-decoration: none; color: blue; font-weight: bold; }
+        #content { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/home" onclick="navigate(event, 'home')">Home</a>
+        <a href="/about" onclick="navigate(event, 'about')">About</a>
+        <a href="/contact" onclick="navigate(event, 'contact')">Contact</a>
+    </nav>
+
+    <div id="content"></div>
+
+    <script>
+        function navigate(e, page) {
+            e.preventDefault(); // sahifa yangilanishini to'xtatadi
+            history.pushState({page}, '', '/' + page); // URL o'zgaradi
+            showContent(page);
+        }
+
+        function showContent(page) {
+            const content = document.getElementById('content');
+
+            if (page === 'home') {
+                content.innerHTML = `
+                    <h2>Home Page</h2>
+                    <p>Bu yerda Home sahifasining contenti ko'rsatiladi.</p>
+                `;
+            } else if (page === 'about') {
+                content.innerHTML = `
+                    <h2>About Page</h2>
+                    <p>Bu yerda About sahifasining contenti ko'rsatiladi.</p>
+                `;
+            } else if (page === 'contact') {
+                content.innerHTML = `
+                    <h2>Contact Page</h2>
+                    <p>Bu yerda Contact sahifasining contenti ko'rsatiladi.</p>
+                `;
+            } else {
+                content.innerHTML = `
+                    <h2>404</h2>
+                    <p>Sahifa topilmadi.</p>
+                `;
+            }
+        }
+
+        // Brauzer back/forward tugmalarini qo'llash
+        window.onpopstate = function(e) {
+            const page = (e.state && e.state.page) || 'home';
+            showContent(page);
+        };
+
+        // Sahifa yuklanganda URL ga qarab content ko'rsatish
+        const path = window.location.pathname.replace('/', '') || 'home';
+        history.replaceState({page: path}, '', window.location.pathname);
+        showContent(path);
+    </script>
+</body>
+</html>
